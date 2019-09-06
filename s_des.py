@@ -1,9 +1,11 @@
+# Shifts
 def left_shift(bits):
 	return bits[1:] + bits[0]
 
 def left_two_shift(bits):
 	return left_shift(left_shift(bits))
 
+# Expand
 def expand_eight(bits):
 	e8 = [4,1,2,3,2,3,4,1]
 	final_permutate = ""
@@ -13,6 +15,7 @@ def expand_eight(bits):
 
 	return final_permutate
 
+# Permutate
 def permutate(bits, per):
 	final_permutate = ""
 
@@ -31,6 +34,7 @@ def permutate_eight(bits):
 	
 	return permutate(bits, p8)
 
+# Permutate or Expand decision
 def p_four(bits):
 	p4 = [2,4,3,1]
 
@@ -48,6 +52,7 @@ def p_eight(bits):
 	else:
 		return permutate_eight(bits)
 
+# Keys generating
 def generate_keys(bits):
 	final_bits = p_ten(bits)
 
@@ -63,6 +68,7 @@ def generate_keys(bits):
 
 	return (k1, k2)
 
+# IP or IP-1
 def ip(bits, IP):
 	
 	final_permutate = ""
@@ -72,6 +78,7 @@ def ip(bits, IP):
 	
 	return final_permutate
 
+# XOR
 def xor(left, right):
 	final = ""
 	for i in range(len(left)):
@@ -82,11 +89,12 @@ def xor(left, right):
 
 	return final
 
+# S
 def S(bits, matriz):
-	linha = int("0b" + bits[0] + bits[3])
-	coluna = int("0b" + bits[1] + bits[2])
+	linha = int(bits[0] + bits[3], 2)
+	coluna = int(bits[1] + bits[2], 2)
 
-	return bin(matriz[linha, coluna])[-2:]
+	return bin(matriz[linha][coluna])[-2:]
 
 def S0(bits):
 	matriz = [[1,0,3,2], [3,2,1,0], [0,2,1,3], [3,1,3,2]]
@@ -98,6 +106,7 @@ def S1(bits):
 
 	return S(bits, matriz)
 
+# Complex function F
 def F(bits, key):
 	final = p_eight(bits)
 	final = xor(final, key)
@@ -109,9 +118,11 @@ def F(bits, key):
 
 	return final
 
+# Switch
 def switch(left, right):
 	return (right, left)
 
+# Encrypt
 def s_des_encrypt(bits):
 	## Pré ....
 	key = "1010111000"
@@ -136,14 +147,62 @@ def s_des_encrypt(bits):
 
 	final_bits = ip(left_bits + right_bits, IP_inverse)
 
-	return '0b' + final_bits
+	return final_bits
+
+# Decrypt
+def s_des_decrypt(bits):
+	key = "1010111000"
+
+	IP = [2,6,3,1,4,8,5,7]
+	IP_inverse = [4,1,3,5,7,2,8,6]
+
+	K1, K2 = generate_keys(key)
+
+	final_bits = ip(bits, IP)
+
+	left_bits = final_bits[:4]
+	right_bits = final_bits[4:]
+
+	left_bits = xor(left_bits,F(right_bits, K2))
+
+	left_bits, right_bits = switch(left_bits, right_bits)
+
+	left_bits = xor(left_bits, F(right_bits, K1))
+
+	final_bits = ip(left_bits+right_bits, IP_inverse)
+
+	return final_bits
+
+def bits_8(bits):
+	while(len(bits) < 8):
+ 		bits = '0'+bits
+	return bits
 
 def main():
-	#print(bin(3))
-	print(bin(int('0b00000011')))
+	#Encriptar texto
+	texto = "hi lorena"
 	
+	print(texto)
 
-	#print(s_des_encrypt(bin(ord('a'))))
+	final_texto = ""
+	for letra in texto:
+		letra_8_bits = bits_8(bin(ord(letra))[2:])
+		letra_cripto = s_des_encrypt(letra_8_bits)
+		final_texto += chr(int(letra_cripto, 2))
+		#print(letra, final_texto[-1])
+
+	print(final_texto)
+
+
+	# Decriptar texto
+	texto_decifrado = ""
+	for letra in final_texto:
+		#print(bin(ord(letra)))
+		letra_8_bits = bits_8(bin(ord(letra))[2:])
+		letra_decrypt = s_des_decrypt(letra_8_bits)
+		texto_decifrado += chr(int(letra_decrypt, 2))
+
+	print(texto_decifrado)
 
 if __name__ == '__main__':
 	main()
