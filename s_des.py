@@ -78,6 +78,17 @@ def ip(bits, IP):
 	
 	return final_permutate
 
+# IP or IP-1 inverse
+
+def ip_inverse(bits, IP):
+	final = ""
+
+	for i in range(1,9):
+		index = IP.index(i)
+		final += bits[index]
+
+	return final
+
 # XOR
 def xor(left, right):
 	final = ""
@@ -158,7 +169,7 @@ def s_des_decrypt(bits):
 
 	K1, K2 = generate_keys(key)
 
-	final_bits = ip(bits, IP)
+	final_bits = ip_inverse(bits, IP_inverse)
 
 	left_bits = final_bits[:4]
 	right_bits = final_bits[4:]
@@ -169,7 +180,7 @@ def s_des_decrypt(bits):
 
 	left_bits = xor(left_bits, F(right_bits, K1))
 
-	final_bits = ip(left_bits+right_bits, IP_inverse)
+	final_bits = ip_inverse(left_bits+right_bits, IP)
 
 	return final_bits
 
@@ -179,6 +190,7 @@ def bits_8(bits):
 	return bits
 
 def main():
+
 	#Encriptar texto
 	texto = "hi lorena"
 	
@@ -203,6 +215,10 @@ def main():
 		texto_decifrado += chr(int(letra_decrypt, 2))
 
 	print(texto_decifrado)
+
+def main2():
+	for i in range(1,9):
+		print(i)
 
 if __name__ == '__main__':
 	main()
