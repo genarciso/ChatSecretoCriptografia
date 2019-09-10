@@ -156,12 +156,13 @@ def s_des_encrypt(bits):
 	p_4 = F(right_bits, K2)
 	left_bits = xor(left_bits, p_4)
 
-	final_bits = ip(left_bits + right_bits, IP_inverse)
+	final_bits = ip("{}{}".format(left_bits, right_bits), IP_inverse)
 
 	return final_bits
 
 # Decrypt
 def s_des_decrypt(bits):
+	## Pré
 	key = "1010111000"
 
 	IP = [2,6,3,1,4,8,5,7]
@@ -174,13 +175,14 @@ def s_des_decrypt(bits):
 	left_bits = final_bits[:4]
 	right_bits = final_bits[4:]
 
+	## Primeira parte
 	left_bits = xor(left_bits,F(right_bits, K2))
-
+	## Segunda parte
 	left_bits, right_bits = switch(left_bits, right_bits)
 
 	left_bits = xor(left_bits, F(right_bits, K1))
 
-	final_bits = ip_inverse(left_bits+right_bits, IP)
+	final_bits = ip_inverse("{}{}".format(left_bits,right_bits), IP)
 
 	return final_bits
 
