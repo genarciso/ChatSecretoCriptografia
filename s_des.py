@@ -105,7 +105,10 @@ def S(bits, matriz):
 	linha = int(bits[0] + bits[3], 2)
 	coluna = int(bits[1] + bits[2], 2)
 
-	return bin(matriz[linha][coluna])[-2:]
+	final = bin(matriz[linha][coluna])[-2:]
+	final = final.replace("b","0")
+
+	return final
 
 def S0(bits):
 	matriz = [[1,0,3,2], [3,2,1,0], [0,2,1,3], [3,1,3,2]]
@@ -121,7 +124,7 @@ def S1(bits):
 def F(bits, key):
 	final = p_eight(bits)
 	final = xor(final, key)
-
+	
 	left_xor = S0(final[:4])
 	right_xor = S1(final[4:])
 
@@ -134,9 +137,9 @@ def switch(left, right):
 	return (right, left)
 
 # Encrypt
-def s_des_encrypt(bits):
+def s_des_encrypt(bits, key):
 	## Pré ....
-	key = "1010111000"
+	#key = "1010000010"
 
 	IP = [2,6,3,1,4,8,5,7]
 	IP_inverse = [4,1,3,5,7,2,8,6]
@@ -147,12 +150,13 @@ def s_des_encrypt(bits):
 
 	left_bits = final_bits[:4]
 	right_bits = final_bits[4:]
+	
 	## Primeira parte
 	p_4 = F(right_bits, K1)
 	left_bits = xor(left_bits, p_4)
+	
 	## Segunda parte
 	left_bits, right_bits = switch(left_bits, right_bits)
-
 	p_4 = F(right_bits, K2)
 	left_bits = xor(left_bits, p_4)
 
@@ -161,9 +165,9 @@ def s_des_encrypt(bits):
 	return final_bits
 
 # Decrypt
-def s_des_decrypt(bits):
+def s_des_decrypt(bits, key):
 	## Pré
-	key = "1010111000"
+	#key = "1010000010"
 
 	IP = [2,6,3,1,4,8,5,7]
 	IP_inverse = [4,1,3,5,7,2,8,6]
@@ -177,11 +181,12 @@ def s_des_decrypt(bits):
 
 	## Primeira parte
 	left_bits = xor(left_bits,F(right_bits, K2))
+
 	## Segunda parte
 	left_bits, right_bits = switch(left_bits, right_bits)
 
 	left_bits = xor(left_bits, F(right_bits, K1))
-
+	
 	final_bits = ip_inverse("{}{}".format(left_bits,right_bits), IP)
 
 	return final_bits
@@ -191,30 +196,33 @@ def bits_8(bits):
  		bits = '0'+bits
 	return bits
 
-def main():
+def encrypt_message(message, key):
+	final_text = ""
+	for char in message:
+		char_8_bits = bits_8(bin(ord(char))[2:])
+		char_cripto = s_des_encrypt(char_8_bits, key)
+		final_text += chr(int(char_cripto, 2))
 
-	#Encriptar texto
-	texto = "hi lorena"
-	
-	print(texto)
+	return final_text
 
-	final_texto = ""
-	for letra in texto:
-		letra_8_bits = bits_8(bin(ord(letra))[2:])
-		letra_cripto = s_des_encrypt(letra_8_bits)
-		final_texto += chr(int(letra_cripto, 2))
-		#print(letra, final_texto[-1])
-
-	print(final_texto)
-
-
-	# Decriptar texto
+def decrypt_message(message, key):
 	texto_decifrado = ""
-	for letra in final_texto:
-		#print(bin(ord(letra)))
+	for letra in message:
 		letra_8_bits = bits_8(bin(ord(letra))[2:])
-		letra_decrypt = s_des_decrypt(letra_8_bits)
+		letra_decrypt = s_des_decrypt(letra_8_bits, key)
 		texto_decifrado += chr(int(letra_decrypt, 2))
+
+	return texto_decifrado
+
+def main():
+	key = '1010000010'
+	#Encriptar texto
+	texto = "Tentativa de esconder uma mensagem!"
+	
+	texto_encriptado = encrypt_message(texto, key)
+	print(texto_encriptado)
+
+	texto_decifrado = decrypt_message(texto_encriptado, key)
 
 	print(texto_decifrado)
 
