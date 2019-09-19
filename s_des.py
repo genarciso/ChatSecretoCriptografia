@@ -76,7 +76,6 @@ def ip(bits, IP):
 	return final_permutate
 
 # IP or IP-1 inverse
-
 def ip_inverse(bits, IP):
 	final = ""
 
@@ -135,7 +134,7 @@ def switch(left, right):
 
 # Encrypt
 def s_des_encrypt(bits, key):
-	## Pré ....
+	#Pré
 	#key = "1010000010"
 
 	IP = [2,6,3,1,4,8,5,7]
@@ -148,11 +147,11 @@ def s_des_encrypt(bits, key):
 	left_bits = final_bits[:4]
 	right_bits = final_bits[4:]
 	
-	## Primeira parte
+	# Primeira parte
 	p_4 = F(right_bits, K1)
 	left_bits = xor(left_bits, p_4)
 	
-	## Segunda parte
+	# Segunda parte
 	left_bits, right_bits = switch(left_bits, right_bits)
 	p_4 = F(right_bits, K2)
 	left_bits = xor(left_bits, p_4)
@@ -210,7 +209,7 @@ def decrypt_message(message, key):
 		texto_decifrado += chr(int(letra_decrypt, 2))
 
 	return texto_decifrado
-
+'''
 def main():
 	key = '1010000010'
 	#Encriptar texto
@@ -230,3 +229,4 @@ def main2():
 if __name__ == '__main__':
 	main()
 
+'''
