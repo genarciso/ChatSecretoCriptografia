@@ -42,7 +42,7 @@ def p_four(bits):
 
 def p_ten(bits):
 	return permutate_ten(bits)
-
+	
 def p_eight(bits):
 	if len(bits) < 8:
 		return expand_eight(bits)
