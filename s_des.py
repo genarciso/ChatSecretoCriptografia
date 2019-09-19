@@ -41,10 +41,7 @@ def p_four(bits):
 	return permutate(bits, p4)
 
 def p_ten(bits):
-	if len(bits) < 10:
-		return expand_ten(bits)
-	else:
-		return permutate_ten(bits)
+	return permutate_ten(bits)
 
 def p_eight(bits):
 	if len(bits) < 8:
