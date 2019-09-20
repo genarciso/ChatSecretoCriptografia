@@ -7,9 +7,12 @@ import sys
 import s_des as sd
 import diffie_hellman as df
 
+def transform_binary(key):
+    return sd.bits_8(bin(key)[2:])
+
 def decode_encrypt(message, which):    
     if(which == "s-des"): # s-des
-        return sd.decrypt_message(message, my_private_key)
+        return sd.decrypt_message(message, transform_binary(my_private_key))
     elif(which == "rc4"):
         return rc4.decrypt_message(message, my_private_key)
     else: # Mensagem em claro
@@ -18,7 +21,7 @@ def decode_encrypt(message, which):
 
 def encode_decrypt(message, which):
     if(which == "s-des"):
-        return sd.encrypt_message(message, dest_public_key)
+        return sd.encrypt_message(message, transform_binary(dest_public_key))
     elif(which == "rc4"):
         return rc4.encrypt_message(message, dest_public_key)
     else: # Mensagem em claro
@@ -36,26 +39,17 @@ message = ""
 
 which_alg = "none"
 next_alg = "none"
-my_private_key = ""
-my_public_key = ""
-dest_public_key = ""
-key = ""
+my_private_key = 0
+my_public_key = 0
+dest_public_key = 0
+key = 0
 expecting_public_key = False
 
 while True: 
   
     # maintains a list of possible input streams 
     sockets_list = [sys.stdin, server] 
-    
-    """ There are two possible input situations. Either the 
-        user wants to give  manual input to send to other people, 
-        or the server is sending a message  to be printed on the 
-        screen. Select returns from sockets_list, the stream that 
-        is reader for input. So for example, if the server wants 
-        to send a message, then the if condition will hold true 
-        below.If the user wants to send a message, the else 
-        condition will evaluate as true
-    """
+
     read_sockets, write_socket, error_socket = select.select(sockets_list,[],[]) 
   
     for socks in read_sockets: 
@@ -69,25 +63,43 @@ while True:
                     next_alg = message.split(' ')[1].lower()
                     # Gerando as chaves privada e pública
                     my_private_key = df.generate_x()
-                    my_public_key = df.generate_y(my_private_key)
+                    my_public_key = df.generate_y(int(my_private_key))
                     # Avisa que está esperando a chave pública do outro
                     expecting_public_key = True
                     # Envia a minha chave pública
                     server.send(encode_decrypt(str(my_public_key),which_alg).encode())
                 else:
-                    print("- Recebeu: {}".format(message))
+                    print("+ Recebeu: {}".format(message.replace('\n', '')))
             else: # Pegando a chave pública do outro
                 dest_public_key = message
-                key = df.diffie_hellman(my_private_key, dest_public_key)
+                key = df.diffie_hellman(int(my_private_key), int(dest_public_key))
                 expecting_public_key = False
                 which_alg = next_alg
                 next_alg = "none"
+                print(which_alg)
         else: 
             # Pegando a mensagem do terminal
             message = sys.stdin.readline()
-            #print(type(message))
-            # Encriptando a mensagem e enviando
-            sys.stdout.write("+ Enviou: {}".format(message)) 
-            sys.stdout.flush() 
             server.send( encode_decrypt(message, which_alg).encode() )
+            if( ("\crypt" in str(message)) ):
+                
+                # Mudança de algoritmo
+                next_alg = message.split(' ')[1].lower()
+                # Gerando as chaves privada e pública
+                my_private_key = df.generate_x()
+                my_public_key = df.generate_y(int(my_private_key))
+                # Avisa que está esperando a chave pública do outro
+                expecting_public_key = True
+                # Envia a minha chave pública
+                server.send(encode_decrypt(str(my_public_key),which_alg).encode())
+                #else:    
+                #print(type(message))
+                # Encriptando a mensagem e enviando
+                # sys.stdout.write("+ Enviou: {}".format(message)) 
+                # sys.stdout.flush() 
+            
+            # End if
+        # End if
+    # End for
+# End while
 server.close() 
