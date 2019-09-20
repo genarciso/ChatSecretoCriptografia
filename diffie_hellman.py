@@ -6,14 +6,14 @@ def generate_q():
 def generate_alpha():
     return 3
 
-def generate_x(q):
-    x = random.randint(0,q-1)
+def generate_x():
+    x = random.randint(0,generate_q()-1)
     return x
 
-def generate_y(q, alpha, x):
-    y = (alpha**x)%q
+def generate_y(x):
+    y = (generate_alpha()**x)%generate_q()
     return y
 
-def diffie_hellman(q, x, y): # return k
-    k = (y**x) % q
+def diffie_hellman(x, y): # return k
+    k = (y**x) % generate_q()
     return k

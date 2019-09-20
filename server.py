@@ -53,8 +53,8 @@ def clientthread(conn, addr):
                     print "<" + addr[0] + "> " + message 
   
                     # Calls broadcast function to send message to all 
-                    message_to_send = "<" + addr[0] + "> " + message 
-                    broadcast(message_to_send, conn) 
+                    #message_to_send =  message 
+                    broadcast(message, conn) 
   
                 else: 
                     """message may have no content if the connection 
@@ -98,7 +98,7 @@ while True:
     list_of_clients.append(conn) 
   
     # prints the address of the user that just connected 
-    print addr[0] + " connected"
+    print "{} connected".format(addr[0]) 
   
     # creates and individual thread for every user  
     # that connects 

@@ -209,24 +209,3 @@ def decrypt_message(message, key):
 		texto_decifrado += chr(int(letra_decrypt, 2))
 
 	return texto_decifrado
-'''
-def main():
-	key = '1010000010'
-	#Encriptar texto
-	texto = "Tentativa de esconder uma mensagem!"
-	
-	texto_encriptado = encrypt_message(texto, key)
-	print(texto_encriptado)
-
-	texto_decifrado = decrypt_message(texto_encriptado, key)
-
-	print(texto_decifrado)
-
-def main2():
-	for i in range(1,9):
-		print(i)
-
-if __name__ == '__main__':
-	main()
-
-'''
