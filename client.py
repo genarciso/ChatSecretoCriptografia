@@ -12,18 +12,18 @@ def transform_binary(key):
 
 def decode_encrypt(message, which):    
     if(which == "s-des"): # s-des
-        return sd.decrypt_message(message, transform_binary(my_private_key))
+        return sd.decrypt_message(message, transform_binary(key))
     elif(which == "rc4"):
-        return rc4.decrypt_message(message, my_private_key)
+        return rc4.decrypt_message(message, key)
     else: # Mensagem em claro
         return message
 
 
 def encode_decrypt(message, which):
     if(which == "s-des"):
-        return sd.encrypt_message(message, transform_binary(dest_public_key))
+        return sd.encrypt_message(message, transform_binary(key))
     elif(which == "rc4"):
-        return rc4.encrypt_message(message, dest_public_key)
+        return rc4.encrypt_message(message, key)
     else: # Mensagem em claro
         return message
 
