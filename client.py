@@ -5,6 +5,7 @@ import sys
 
 # import s-des, diffie_hellman
 import s_des as sd
+import rc4 as rc4
 import diffie_hellman as df
 
 def transform_binary(key):
@@ -23,7 +24,7 @@ def encode_decrypt(message, which):
     if(which == "s-des"):
         return sd.encrypt_message(message, transform_binary(key))
     elif(which == "rc4"):
-        return rc4.encrypt_message(message, key)
+        return rc4.encrypt_message(message, str(key))
     else: # Mensagem em claro
         return message
 
