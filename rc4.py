@@ -1,5 +1,6 @@
 import textwrap
 import readline
+import binascii
 
 def array_S_T(key):
     S = []
@@ -38,17 +39,23 @@ def run_rc4(permutate_array, text):
         byte = ord(char)
         cipher_byte = byte ^ random_char.__next__()
         cipher_text.append(chr(cipher_byte))
-    return ''.join(cipher_text)
+    print(''.join(cipher_text).encode())
+    return binascii.hexlify(''.join(cipher_text).encode())
 
 def loop_user_query(k):
     """Raises EOFError when the user uses an EOT escape sequence (i.e. ^D)."""
     quotes = "'\""
-    while True:
-        text = input('Enter plain or cipher text: ')
-        if text[0] == text[-1] and text[0] in quotes:
-            # Unescape presumed ciphertext.
-            print ('Unescaping ciphertext...')
-            text = text[1:-1]
+    text = input('Enter plain or cipher text: ')
+    if text[0] == text[-1] and text[0] in quotes:
+        # Unescape presumed ciphertext.
+        print ('Unescaping ciphertext...')
+        text = binascii.unhexlify(text[1:-1]).decode('utf-8')
+        k_copy = list(k)
+        j = repr(run_rc4(k_copy, text))
+        print ('Your RC4 text is:', j)
+        text_de = binascii.unhexlify(j[2:-1])
+        print (text_de.decode('utf-8'))
+    else: 
         k_copy = list(k)
         print ('Your RC4 text is:', repr(run_rc4(k_copy, text)))
 
