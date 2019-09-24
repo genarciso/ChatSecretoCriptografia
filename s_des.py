@@ -1,11 +1,11 @@
-# Shifts
+# Funções Shifts
 def left_shift(bits):
 	return bits[1:] + bits[0]
 
 def left_two_shift(bits):
 	return left_shift(left_shift(bits))
 
-# Expand
+# Expansão de 8 bits
 def expand_eight(bits):
 	e8 = [4,1,2,3,2,3,4,1]
 	final_permutate = ""
@@ -15,7 +15,12 @@ def expand_eight(bits):
 
 	return final_permutate
 
-# Permutate
+'''
+	Esta função implementa a permutação de uma cadeia de bits
+	@Param bits, bits para permutar
+	@Param per, qual a permutação deve fazer
+	@Return bits permutados de acordo com {per}
+'''
 def permutate(bits, per):
 	final_permutate = ""
 
@@ -23,33 +28,36 @@ def permutate(bits, per):
 		final_permutate += bits[i-1]
 
 	return final_permutate
-
+# Permutação de 10 bits
 def permutate_ten(bits):
 	p10 = [3,5,2,7,4,10,1,9,8,6]
 
 	return permutate(bits, p10)
 
+# Permutação de 8 bits
 def permutate_eight(bits):
 	p8 = [6,3,7,4,8,5,10,9]
 	
 	return permutate(bits, p8)
 
-# Permutate or Expand decision
+# Permutação de 4 bits
 def p_four(bits):
 	p4 = [2,4,3,1]
 
 	return permutate(bits, p4)
 
+# Permutação de 10 bits
 def p_ten(bits):
 	return permutate_ten(bits)
-	
+
+# Expansão ou Permutação de bits até 8 caracteres
 def p_eight(bits):
 	if len(bits) < 8:
 		return expand_eight(bits)
 	else:
 		return permutate_eight(bits)
 
-# Keys generating
+# Geração de chaves K1 e K2
 def generate_keys(bits):
 	final_bits = p_ten(bits)
 
@@ -75,7 +83,14 @@ def ip(bits, IP):
 	
 	return final_permutate
 
-# IP or IP-1 inverse
+'''
+	Esta função implementa a função que leva uma sequencia de bits de 
+	volta para o que era antes da passagem dela pelo IP ou IP-1
+	s
+	@Param bits, caractere em bits
+	@Param IP, IP ou IP-1
+	@Return bits antes de passarem pelo IP ou IP-1
+'''
 def ip_inverse(bits, IP):
 	final = ""
 
@@ -85,7 +100,7 @@ def ip_inverse(bits, IP):
 
 	return final
 
-# XOR
+# Função XOR
 def xor(left, right):
 	final = ""
 	for i in range(len(left)):
@@ -96,7 +111,7 @@ def xor(left, right):
 
 	return final
 
-# S
+# Função S do S-DES
 def S(bits, matriz):
 	linha = int(bits[0] + bits[3], 2)
 	coluna = int(bits[1] + bits[2], 2)
@@ -106,17 +121,19 @@ def S(bits, matriz):
 
 	return final
 
+# Função S0 do S-DES
 def S0(bits):
 	matriz = [[1,0,3,2], [3,2,1,0], [0,2,1,3], [3,1,3,2]]
 
 	return S(bits, matriz)
 
+# Função S1 do S-DES
 def S1(bits):
 	matriz = [[1,1,2,3], [2,0,1,3], [3,0,1,0], [2,1,0,3]]
 
 	return S(bits, matriz)
 
-# Complex function F
+# Função F do S-DES
 def F(bits, key):
 	final = p_eight(bits)
 	final = xor(final, key)
@@ -132,11 +149,13 @@ def F(bits, key):
 def switch(left, right):
 	return (right, left)
 
-# Encrypt
+'''
+	Esta função implementa o algoritmo S-DES para encriptar um caractere em bits de acordo com a chave.
+	@Param bits, caractere em bits
+	@Param key, chave para encriptação
+	@Return 10 bits
+'''
 def s_des_encrypt(bits, key):
-	#Pré
-	#key = "1010000010"
-
 	IP = [2,6,3,1,4,8,5,7]
 	IP_inverse = [4,1,3,5,7,2,8,6]
 
@@ -147,11 +166,9 @@ def s_des_encrypt(bits, key):
 	left_bits = final_bits[:4]
 	right_bits = final_bits[4:]
 	
-	# Primeira parte
 	p_4 = F(right_bits, K1)
 	left_bits = xor(left_bits, p_4)
 	
-	# Segunda parte
 	left_bits, right_bits = switch(left_bits, right_bits)
 	p_4 = F(right_bits, K2)
 	left_bits = xor(left_bits, p_4)
@@ -160,11 +177,13 @@ def s_des_encrypt(bits, key):
 
 	return final_bits
 
-# Decrypt
+'''
+	Esta função implementa o algoritmo S-DES para decifrar um caractere em bits de acordo com a chave.
+	@Param bits, caractere em bits
+	@Param key, chave para decifragem
+	@Return 10 bits
+'''
 def s_des_decrypt(bits, key):
-	## Pré
-	#key = "1010000010"
-
 	IP = [2,6,3,1,4,8,5,7]
 	IP_inverse = [4,1,3,5,7,2,8,6]
 
@@ -175,10 +194,8 @@ def s_des_decrypt(bits, key):
 	left_bits = final_bits[:4]
 	right_bits = final_bits[4:]
 
-	## Primeira parte
 	left_bits = xor(left_bits,F(right_bits, K2))
 
-	## Segunda parte
 	left_bits, right_bits = switch(left_bits, right_bits)
 
 	left_bits = xor(left_bits, F(right_bits, K1))
@@ -187,11 +204,33 @@ def s_des_decrypt(bits, key):
 
 	return final_bits
 
+'''
+	Esta função deixa os bits no formato de 8 casas
+	@Param bits, bits em tamanho menor que 8
+	@Return 8 bits
+'''
 def bits_8(bits):
 	while(len(bits) < 8):
  		bits = '0'+bits
 	return bits
 
+'''
+	Esta função deixa os bits no formato de 10 casas
+	@Param bits, bits em tamanho menor que 10
+	@Return 10 bits
+'''
+def bits_10(bits):
+	bits = bits_8(bits)
+	while(len(bits) < 10):
+		bits = '0'+bits
+	return bits
+
+'''
+	Esta função criptografa uma mensagem (string) utilizando uma chave (10 bits)
+	@Param message, mensagem que se deseja encriptar
+	@Param key, chave de 10 bits que vai ser utilizada na criptografia
+	@Return mensagem encriptada
+'''
 def encrypt_message(message, key):
 	final_text = ""
 	for char in message:
@@ -201,6 +240,12 @@ def encrypt_message(message, key):
 
 	return final_text
 
+'''
+	Esta função decifra uma mensagem (string) utilizando a chave (10 bits) que foi utilizada para encriptar
+	@Param message, mensagem que se deseja decifrar
+	@Param key, chave de 10 bits que vai ser utilizada na decifragem
+	@Return mensagem decifrada
+'''
 def decrypt_message(message, key):
 	texto_decifrado = ""
 	for letra in message:

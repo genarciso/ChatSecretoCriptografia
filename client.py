@@ -9,7 +9,7 @@ import rc4 as rc4
 import diffie_hellman as df
 
 def transform_binary(key):
-    return sd.bits_8(bin(key)[2:])
+    return sd.bits_10(bin(key)[2:])
 
 def decode_encrypt(message, which):    
     decrypted_message = ''
@@ -21,7 +21,7 @@ def decode_encrypt(message, which):
         decrypted_message = sd.decrypt_message(message, transform_binary(key))
     elif("rc4" in which):
         print('Entrou no rc4')
-        decrypted_message = rc4.decrypt_message(message, key)
+        decrypted_message = rc4.decrypt_message(message, str(key))
     else: # Mensagem em claro
         print('Entrou no else')
         decrypted_message = message
