@@ -14,44 +14,26 @@ def transform_binary(key):
 def decode_encrypt(message, which):    
     decrypted_message = ''
     
-    print('----------------------------- Decifrando -----------------------------')
-    
     if("s-des" in which): # s-des
-        print('Entrou no s-des')
         decrypted_message = sd.decrypt_message(message, transform_binary(key))
     elif("rc4" in which):
-        print('Entrou no rc4')
         decrypted_message = rc4.decrypt_message(message, str(key))
     else: # Mensagem em claro
-        print('Entrou no else')
         decrypted_message = message
-    
-    
-    print('* Mensagem decifrada: {}'.format(decrypted_message))
-    print('-----------------------------------------------------------------------')
     
     return decrypted_message
 
 
 def encode_decrypt(message, which):
     encrypted_message = ''
-    
-    print('----------------------------- Encriptando -----------------------------')
-    print(which)
-    
+
     if("s-des" in which):
-        print('Entrou no s-des')
         encrypted_message = sd.encrypt_message(message, transform_binary(key))
     elif("rc4" in which):
-        print('Entrou no rc4')
         encrypted_message = rc4.encrypt_message(message, str(key))
     else: # Mensagem em claro
-        print('Entrou no else')
         encrypted_message = message
     
-    print('* Mensagem encriptada: {}'.format(encrypted_message))
-    
-    print('-----------------------------------------------------------------------')
     return encrypted_message
 
 
@@ -82,8 +64,9 @@ while True:
     for socks in read_sockets: 
         if socks == server: 
             message = socks.recv(2048)
-            # ToDo: decifrar a mensagem antes de imprimir
+            
             message = decode_encrypt(message.decode(), which_alg)
+            
             if not(expecting_public_key):
                 if( ("\crypt" in str(message)) ):
                     # Mudança de algoritmo
@@ -103,13 +86,12 @@ while True:
                 expecting_public_key = False
                 which_alg = next_alg
                 next_alg = "none"
-                print(which_alg)
+                print("*** OBS: A partir de agora as mensagens estão utilizando a cifragem {}".format(which_alg))
         else: 
             # Pegando a mensagem do terminal
             message = sys.stdin.readline()
             server.send( encode_decrypt(message, which_alg).encode() )
             if( ("\crypt" in str(message)) ):
-                
                 # Mudança de algoritmo
                 next_alg = message.split(' ')[1].lower()
                 # Gerando as chaves privada e pública

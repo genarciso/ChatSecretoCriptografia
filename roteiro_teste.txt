@@ -1,0 +1,41 @@
+1) Abra um terminal para o servidor e digite
+    $ python2 server.py 127.0.0.1 5354
+2) Abra um terminal para o cliente A e digite
+    $ python2 client.py 127.0.0.1 5354
+3) Abra um terminal para o cliente A e digite
+    $ python2 client.py 127.0.0.1 5354
+4) No terminal de A, digite:
+    olá
+5) No terminal de B, digite:
+    Oi, tudo bem?
+6) Veja que o servidor consegue ler as mensagens em texto claro no terminal do servidor.
+
+-------------------------- Testando S-DES --------------------------
+
+7) No terminal de A, digite:
+    \crypt s-des
+8) No terminal de B, digite:
+    nossas mensagens estão encriptadas?
+9) No terminal de A, digite:
+    Agora estão!
+10) Veja que o servidor NÃO consegue ler as mensagens em texto claro no terminal do servidor
+
+-------------------------- Testando RC4 --------------------------
+
+11) No terminal de A, digite:
+    \crypt rc4
+12) No terminal de B, digite:
+    nossas mensagens estão encriptadas?
+13) No terminal de A, digite:
+    Agora estão!
+14) Veja que o servidor NÃO consegue ler as mensagens em texto claro no terminal do servidor
+
+-------------------------- Voltando para os texto as claras --------------------------
+
+15) No terminal de A, digite:
+    \crypt none
+16) No terminal de B, digite:
+    Voce retirou a criptografia da nossa conversa?
+17) No terminal de A, digite:
+    Retirei sim!
+18) Veja que o servidor consegue ler as mensagens em texto claro no terminal do servidor.
