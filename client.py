@@ -52,6 +52,7 @@ my_private_key = 0
 my_public_key = 0
 dest_public_key = 0
 key = 0
+expecting_public_key = False
 
 
 while True: 
@@ -62,7 +63,6 @@ while True:
     read_sockets, write_socket, error_socket = select.select(sockets_list,[],[]) 
   
     for socks in read_sockets: 
-        expecting_public_key = False
         if socks == server: 
             message = socks.recv(2048)
             

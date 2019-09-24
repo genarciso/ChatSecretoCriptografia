@@ -37,21 +37,19 @@ increased as per convenience.
 server.listen(100) 
   
 list_of_clients = [] 
+
+contadorCliente = 0
   
-def clientthread(conn, addr): 
+def clientthread(conn, addr, contadorCliente): 
   
     # sends a message to the client whose user object is conn =
     conn.send("Bem vindos!")
     while True: 
             try: 
                 message = conn.recv(2048) 
+                
                 if message: 
-  
-                    """prints the message and address of the 
-                    user who just sent the message on the server 
-                    terminal"""
-                    print "<" + addr[0] + "> " + message 
-  
+                    print "<" + str(contadorCliente) + "> " + message
                     # Calls broadcast function to send message to all 
                     #message_to_send =  message 
                     broadcast(message, conn) 
@@ -59,6 +57,7 @@ def clientthread(conn, addr):
                 else: 
                     """message may have no content if the connection 
                     is broken, in this case we remove the connection"""
+                    print "deu erro"
                     remove(conn) 
   
             except: 
@@ -86,7 +85,7 @@ def remove(connection):
         list_of_clients.remove(connection) 
   
 while True: 
-  
+    
     """Accepts a connection request and stores two parameters,  
     conn which is a socket object for that user, and addr  
     which contains the IP address of the client that just  
@@ -98,11 +97,12 @@ while True:
     list_of_clients.append(conn) 
   
     # prints the address of the user that just connected 
-    print "{} connected".format(addr[0]) 
+    print "{} conectado".format(addr[0]) 
   
     # creates and individual thread for every user  
     # that connects 
-    start_new_thread(clientthread,(conn,addr))     
-  
+    contadorCliente += 1
+    start_new_thread(clientthread,(conn,addr,contadorCliente))     
+    
 conn.close() 
 server.close() 

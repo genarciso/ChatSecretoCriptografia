@@ -18,4 +18,5 @@
 <p> Aroldo Felix Pereira Junior (junioraroldo37@gmail.com)
 <p> Gabriel Estevam Narciso (gabriel.estevam.narciso@gmail.com)
 <h2>Referências</h2>
-* Colocar a referência do algoritmo de cliente/servidor
+
+<b>Chat</b> : <a>https://github.com/dvatsav/Chat-Room-server</a>
