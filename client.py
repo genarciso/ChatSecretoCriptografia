@@ -12,21 +12,47 @@ def transform_binary(key):
     return sd.bits_8(bin(key)[2:])
 
 def decode_encrypt(message, which):    
-    if(which == "s-des"): # s-des
-        return sd.decrypt_message(message, transform_binary(key))
-    elif(which == "rc4"):
-        return rc4.decrypt_message(message, key)
+    decrypted_message = ''
+    
+    print('----------------------------- Decifrando -----------------------------')
+    
+    if("s-des" in which): # s-des
+        print('Entrou no s-des')
+        decrypted_message = sd.decrypt_message(message, transform_binary(key))
+    elif("rc4" in which):
+        print('Entrou no rc4')
+        decrypted_message = rc4.decrypt_message(message, key)
     else: # Mensagem em claro
-        return message
+        print('Entrou no else')
+        decrypted_message = message
+    
+    
+    print('* Mensagem decifrada: {}'.format(decrypted_message))
+    print('-----------------------------------------------------------------------')
+    
+    return decrypted_message
 
 
 def encode_decrypt(message, which):
-    if(which == "s-des"):
-        return sd.encrypt_message(message, transform_binary(key))
-    elif(which == "rc4"):
-        return rc4.encrypt_message(message, str(key))
+    encrypted_message = ''
+    
+    print('----------------------------- Encriptando -----------------------------')
+    print(which)
+    
+    if("s-des" in which):
+        print('Entrou no s-des')
+        encrypted_message = sd.encrypt_message(message, transform_binary(key))
+    elif("rc4" in which):
+        print('Entrou no rc4')
+        encrypted_message = rc4.encrypt_message(message, str(key))
     else: # Mensagem em claro
-        return message
+        print('Entrou no else')
+        encrypted_message = message
+    
+    print('* Mensagem encriptada: {}'.format(encrypted_message))
+    
+    print('-----------------------------------------------------------------------')
+    return encrypted_message
 
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
@@ -93,11 +119,6 @@ while True:
                 expecting_public_key = True
                 # Envia a minha chave pública
                 server.send(encode_decrypt(str(my_public_key),which_alg).encode())
-                #else:    
-                #print(type(message))
-                # Encriptando a mensagem e enviando
-                # sys.stdout.write("+ Enviou: {}".format(message)) 
-                # sys.stdout.flush() 
             
             # End if
         # End if
