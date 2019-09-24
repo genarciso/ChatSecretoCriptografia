@@ -15,7 +15,7 @@
 <p>Se o usuário escolher s-des, então o método de cifragem será do S-DES. O mesmo acontecerá com o RC4.
 <p>Se o usuário digitar qualquer outra coisa após o \crypt, então o os clientes passarão a conversar de maneira não cifrada.
 <h2>Autores</h2>
-* Aroldo Felix Pereira Junior (junioraroldo37@gmail.com)
-* Gabriel Estevam Narciso (gabriel.estevam.narciso@gmail.com)
+<p> Aroldo Felix Pereira Junior (junioraroldo37@gmail.com)
+<p> Gabriel Estevam Narciso (gabriel.estevam.narciso@gmail.com)
 <h2>Referências</h2>
 * Colocar a referência do algoritmo de cliente/servidor
