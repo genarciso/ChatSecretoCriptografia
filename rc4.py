@@ -42,7 +42,7 @@ def run_rc4(permutate_array, text):
 def decrypt_message(text, key):
     S,T = array_S_T(key)
     S = initial_permutation(S, T)
-    text = binascii.unhexlify(text[1:-1]).decode('utf-8')
+    text = binascii.unhexlify(text[2:-1]).decode('utf-8')
     array_copy = list(S)
     natural_value = repr(run_rc4(array_copy, text))
     text_de = binascii.unhexlify(natural_value[2:-1])
