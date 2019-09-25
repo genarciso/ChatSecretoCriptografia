@@ -38,11 +38,11 @@ def encode_decrypt(message, which):
 
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-if len(sys.argv) != 3: 
-    print("Uso correto: script, endereço IP, número da porta")
-    exit() 
-IP_address = str(sys.argv[1]) 
-Port = int(sys.argv[2]) 
+# if len(sys.argv) != 3: 
+#     print("Uso correto: script, endereço IP, número da porta")
+#     exit() 
+IP_address = '127.0.0.1'
+Port = 5354 
 server.connect((IP_address, Port)) 
 message = ""
 
