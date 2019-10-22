@@ -1,10 +1,10 @@
 -------------------------- Passos Padrão --------------------------
 1) Abra um terminal para o servidor e digite
-    $ python2
+    $ python2 server.py
 2) Abra um terminal para o cliente A e digite
-    $ python2
+    $ python3 cliente.py
 3) Abra um terminal para o cliente A e digite
-    $ python2
+    $ python3 cliente.py
 
 -------------------------- Testando Conversa --------------------------
 
